@@ -719,7 +719,7 @@ prompt_dir() {
 
 # dir_writable: Display information about the user's permission to write in the current directory
 prompt_dir_writable() {
-  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "red" "226" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
+  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "242" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
 }
 
 # Docker machine
@@ -748,7 +748,7 @@ prompt_go_version() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_history() {
-  serialize_segment "$0" "" "$1" "$2" "${3}" "244" "${DEFAULT_COLOR}" "%h" ""
+  serialize_segment "$0" "" "$1" "$2" "${3}" "244" "223" "%h" ""
 }
 
 # Detection for virtualization (systemd based systems only)
@@ -869,6 +869,7 @@ prompt_nvm() {
   [[ "${node_version}" == "none" ]] && node_version=""
   local nvm_default=$(cat $NVM_DIR/alias/default 2> /dev/null)
   [[ -n "${nvm_default}" && "${node_version}" =~ "${nvm_default}" ]] && node_version=""
+  [[ "${node_version}" == "system" ]] && node_version="vsystem"
 
   serialize_segment "$0" "" "$1" "$2" "${3}" "green" "011" "${node_version:1}" "NODE_ICON"
 }
@@ -1051,6 +1052,7 @@ set_default POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE false
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_status() {
+  content="${RETVAL}"
   typeset -Ah current_state
   if [[ "${RETVAL}" -ne 0 ]]; then
     if [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" ]]; then
@@ -1074,16 +1076,17 @@ prompt_status() {
       )
     fi
   elif [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" || "$POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE" == "true" ]]; then
+    [ "$POWERLEVEL9K_STATUS_OK_NON_VERBOSE" == true ] && content=""
     current_state=(
       "STATE"               "OK"
-      "CONTENT"             "${RETVAL}"
+      "CONTENT"             "$content"
       "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
       "FOREGROUND_COLOR"    "green"
       "VISUAL_IDENTIFIER"   "OK_ICON"
     )
   fi
 
-  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}"
+  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}" "true"
 }
 
 # Parameters:
@@ -1218,7 +1221,7 @@ build_test_stats() {
 prompt_time() {
   set_default POWERLEVEL9K_TIME_FORMAT "%D{%H:%M:%S}"
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "$DEFAULT_COLOR_INVERTED" "$DEFAULT_COLOR" "${POWERLEVEL9K_TIME_FORMAT}" ""
+  serialize_segment "$0" "" "$1" "$2" "${3}" "$DEFAULT_COLOR_INVERTED" "$DEFAULT_COLOR" "${POWERLEVEL9K_TIME_FORMAT}" "${POWERLEVEL9K_TIME_ICON}"
 }
 
 # todo.sh: shows the number of tasks in your todo.sh file
