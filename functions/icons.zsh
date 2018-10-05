@@ -166,8 +166,10 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       LEFT_SEGMENT_SEPARATOR         $'\uE0B0'              # 
       RIGHT_SEGMENT_SEPARATOR        $'\uE0B2'              # 
       LEFT_SEGMENT_END_SEPARATOR     ' '                    # Whitespace
-      LEFT_SUBSEGMENT_SEPARATOR      $'\uE0B1'              # 
-      RIGHT_SUBSEGMENT_SEPARATOR     $'\uE0B3'              # 
+      # LEFT_SUBSEGMENT_SEPARATOR      $'\uE0B1'              # 
+      # RIGHT_SUBSEGMENT_SEPARATOR     $'\uE0B3'              # 
+      LEFT_SUBSEGMENT_SEPARATOR      $'\uEC01'              # 
+      RIGHT_SUBSEGMENT_SEPARATOR     $'\uEC03'              # i
       CARRIAGE_RETURN_ICON           $'\u21B5'              # ↵
       ROOT_ICON                      $'\uE614 '             # 
       RUBY_ICON                      $'\uF219 '             # 
@@ -221,6 +223,14 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       LOCK_ICON                      $'\UF023'              # 
       EXECUTION_TIME_ICON            $'\uF252'              # 
       SSH_ICON                       $'\uF489'              # 
+      SKULL_ICON                     $'\uE231  '            # 
+      DEVPATH_ICON                   '  '
+      WORKPATH_ICON                  $'\uF488  '            # 
+      FWPATH_ICON                    $'\uF1D2  '            # 
+      VIM_ICON                       $'\uE7C5  '            # 
+      GITPATH_ICON                   $'\uF296  '            #  / 
+      FAIL_ICON_2                    $'\uF476'              # 
+      OK_ICON_2                      $'\uF05D'              # 
   )
 }
 _powerlevel9k_setup_nerdfont_fontconfig_icons

@@ -719,7 +719,7 @@ prompt_dir() {
 
 # dir_writable: Display information about the user's permission to write in the current directory
 prompt_dir_writable() {
-  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "242" "9" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
+  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "242" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
 }
 
 # Docker machine
@@ -748,7 +748,7 @@ prompt_go_version() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_history() {
-  serialize_segment "$0" "" "$1" "$2" "${3}" "245" "${DEFAULT_COLOR}" "%h" ""
+  serialize_segment "$0" "" "$1" "$2" "${3}" "244" "223" "%h" ""
 }
 
 # Detection for virtualization (systemd based systems only)
@@ -1072,7 +1072,7 @@ prompt_status() {
         "CONTENT"             "${RETVAL}"
         "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
         "FOREGROUND_COLOR"    "9"
-        "VISUAL_IDENTIFIER"   "FAIL_ICON"
+        "VISUAL_IDENTIFIER"   "FAIL_ICON_2"
       )
     fi
   elif [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" || "$POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE" == "true" ]]; then
@@ -1082,7 +1082,7 @@ prompt_status() {
       "CONTENT"             "$content"
       "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
       "FOREGROUND_COLOR"    "green"
-      "VISUAL_IDENTIFIER"   "OK_ICON"
+      "VISUAL_IDENTIFIER"   "OK_ICON_2"
     )
   fi
 
@@ -1220,8 +1220,7 @@ build_test_stats() {
 #   * $3 Joined: bool - If the segment should be joined
 prompt_time() {
   set_default POWERLEVEL9K_TIME_FORMAT "%D{%H:%M:%S}"
-
-  serialize_segment "$0" "" "$1" "$2" "${3}" "237" "253" "${POWERLEVEL9K_TIME_FORMAT}" "${POWERLEVEL9K_TIME_ICON}"
+  serialize_segment "$0" "" "$1" "$2" "${3}" "$DEFAULT_COLOR_INVERTED" "$DEFAULT_COLOR" "${POWERLEVEL9K_TIME_FORMAT}" "${POWERLEVEL9K_TIME_ICON}"
 }
 
 # todo.sh: shows the number of tasks in your todo.sh file
@@ -1536,10 +1535,29 @@ p9k_build_prompt_from_cache() {
   RPROMPT='' # Reset
   local RPROMPT_SUFFIX=''
   local PROMPT_SUFFIX=''
+  local ICON=''
   if [[ "${POWERLEVEL9K_PROMPT_ON_NEWLINE}" == true ]]; then
     PROMPT="$(print_icon 'MULTILINE_FIRST_PROMPT_PREFIX')%f%b%k${PROMPT}"
-    PROMPT_SUFFIX="
-$(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
+    if [[ "$PWD" == "/" ]]; then
+      ICON="
+ $(print_icon 'SKULL_ICON')"
+    elif [[ "$PWD" =~ ".vim" ]]; then
+      ICON="
+ $(print_icon 'VIM_ICON')"
+    elif [[ "$PWD" =~ "$FWPATH" ]]; then
+      ICON="
+ $(print_icon 'FWPATH_ICON')"
+    elif [[ -d "$PWD/.git" ]]; then
+      ICON="
+ $(print_icon 'GITPATH_ICON')"
+    elif [[ "$PWD" =~ "$DEVPATH" ]]; then
+      ICON="
+ $(print_icon 'DEVPATH_ICON')"
+    else
+      ICON="
+ $(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
+    fi
+    PROMPT_SUFFIX="%F{51}${ICON}%f"
     if [[ "${POWERLEVEL9K_RPROMPT_ON_NEWLINE}" != true ]]; then
       # The right prompt should be on the same line as the first line of the left
       # prompt. To do so, there is just a quite ugly workaround: Before zsh draws
