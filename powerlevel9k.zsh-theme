@@ -1072,7 +1072,7 @@ prompt_status() {
         "CONTENT"             "${RETVAL}"
         "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
         "FOREGROUND_COLOR"    "red"
-        "VISUAL_IDENTIFIER"   "FAIL_ICON"
+        "VISUAL_IDENTIFIER"   "FAIL_ICON_2"
       )
     fi
   elif [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" || "$POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE" == "true" ]]; then
@@ -1082,7 +1082,7 @@ prompt_status() {
       "CONTENT"             "$content"
       "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
       "FOREGROUND_COLOR"    "green"
-      "VISUAL_IDENTIFIER"   "OK_ICON"
+      "VISUAL_IDENTIFIER"   "OK_ICON_2"
     )
   fi
 
@@ -1536,10 +1536,29 @@ p9k_build_prompt_from_cache() {
   RPROMPT='' # Reset
   local RPROMPT_SUFFIX=''
   local PROMPT_SUFFIX=''
+  local ICON=''
   if [[ "${POWERLEVEL9K_PROMPT_ON_NEWLINE}" == true ]]; then
     PROMPT="$(print_icon 'MULTILINE_FIRST_PROMPT_PREFIX')%f%b%k${PROMPT}"
-    PROMPT_SUFFIX="
-$(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
+    if [[ "$PWD" == "/" ]]; then
+      ICON="
+ $(print_icon 'SKULL_ICON')"
+    elif [[ "$PWD" =~ ".vim" ]]; then
+      ICON="
+ $(print_icon 'VIM_ICON')"
+    elif [[ "$PWD" =~ "$FWPATH" ]]; then
+      ICON="
+ $(print_icon 'FWPATH_ICON')"
+    elif [[ -d "$PWD/.git" ]]; then
+      ICON="
+ $(print_icon 'GITPATH_ICON')"
+    elif [[ "$PWD" =~ "$DEVPATH" ]]; then
+      ICON="
+ $(print_icon 'DEVPATH_ICON')"
+    else
+      ICON="
+ $(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
+    fi
+    PROMPT_SUFFIX="%F{51}${ICON}%f"
     if [[ "${POWERLEVEL9K_RPROMPT_ON_NEWLINE}" != true ]]; then
       # The right prompt should be on the same line as the first line of the left
       # prompt. To do so, there is just a quite ugly workaround: Before zsh draws
