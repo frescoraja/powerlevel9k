@@ -223,12 +223,10 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       LOCK_ICON                      $'\UF023'              # 
       EXECUTION_TIME_ICON            $'\uF252'              # 
       SSH_ICON                       $'\uF489'              # 
-      SKULL_ICON                     $'\uE231  '            # 
-      DEVPATH_ICON                   '  '
-      WORKPATH_ICON                  $'\uF488  '            # 
-      FWPATH_ICON                    $'\uF1D2  '            # 
-      VIM_ICON                       $'\uE7C5  '            # 
-      GITPATH_ICON                   $'\uF296  '            #  / 
+      SKULL_ICON                     $'\uE231'              # 
+      DEVPATH_ICON                   ''
+      VIM_ICON                       $'\uE7C5'              # 
+      VIM_ICON_2                     $'\uE62B'              # 
       FAIL_ICON_2                    $'\uF476'              # 
       OK_ICON_2                      $'\uF05D'              # 
   )

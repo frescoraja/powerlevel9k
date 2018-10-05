@@ -1518,7 +1518,7 @@ serialize_segment() {
 # a child process terminates (= sends
 # SIGWINCH). We read in the segments
 # variables, use that information to
-# glue the segments back togeher and
+# glue the segments back together and
 # finally reset the prompt.
 
 # The default CACHE_DIR is following the XDG basedir spec:
@@ -1535,29 +1535,27 @@ p9k_build_prompt_from_cache() {
   RPROMPT='' # Reset
   local RPROMPT_SUFFIX=''
   local PROMPT_SUFFIX=''
-  local ICON=''
   if [[ "${POWERLEVEL9K_PROMPT_ON_NEWLINE}" == true ]]; then
     PROMPT="$(print_icon 'MULTILINE_FIRST_PROMPT_PREFIX')%f%b%k${PROMPT}"
     if [[ "$PWD" == "/" ]]; then
-      ICON="
- $(print_icon 'SKULL_ICON')"
+      PROMPT_SUFFIX="
+ %F{231}$(print_icon 'SKULL_ICON')  %f"
     elif [[ "$PWD" =~ ".vim" ]]; then
-      ICON="
- $(print_icon 'VIM_ICON')"
-    elif [[ "$PWD" =~ "$FWPATH" ]]; then
-      ICON="
- $(print_icon 'FWPATH_ICON')"
-    elif [[ -d "$PWD/.git" ]]; then
-      ICON="
- $(print_icon 'GITPATH_ICON')"
+      PROMPT_SUFFIX="
+ %F{228}$(print_icon 'VIM_ICON_2')  %f"
+    elif [[ `git config --get remote.origin.url` =~ "github" ]]; then
+      PROMPT_SUFFIX="
+ %F{92}$(print_icon 'VCS_GIT_GITHUB_ICON') %f"
+    elif [[ `git config --get remote.origin.url` =~ "git." ]]; then
+      PROMPT_SUFFIX="
+ %F{214}$(print_icon 'VCS_GIT_GITLAB_ICON') %f"
     elif [[ "$PWD" =~ "$DEVPATH" ]]; then
-      ICON="
- $(print_icon 'DEVPATH_ICON')"
+      PROMPT_SUFFIX="
+ %F{50}$(print_icon 'DEVPATH_ICON')  %f"
     else
-      ICON="
- $(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
+      PROMPT_SUFFIX="
+ %F{51}$(print_icon 'SSH_ICON')  %f"
     fi
-    PROMPT_SUFFIX="%F{51}${ICON}%f"
     if [[ "${POWERLEVEL9K_RPROMPT_ON_NEWLINE}" != true ]]; then
       # The right prompt should be on the same line as the first line of the left
       # prompt. To do so, there is just a quite ugly workaround: Before zsh draws
