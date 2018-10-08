@@ -166,10 +166,8 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       LEFT_SEGMENT_SEPARATOR         $'\uE0B0'              # 
       RIGHT_SEGMENT_SEPARATOR        $'\uE0B2'              # 
       LEFT_SEGMENT_END_SEPARATOR     ' '                    # Whitespace
-      # LEFT_SUBSEGMENT_SEPARATOR      $'\uE0B1'              # 
-      # RIGHT_SUBSEGMENT_SEPARATOR     $'\uE0B3'              # 
-      LEFT_SUBSEGMENT_SEPARATOR      $'\uEC01'              # 
-      RIGHT_SUBSEGMENT_SEPARATOR     $'\uEC03'              # i
+      LEFT_SUBSEGMENT_SEPARATOR      $'\uE0B1'              # 
+      RIGHT_SUBSEGMENT_SEPARATOR     $'\uE0B3'              # 
       CARRIAGE_RETURN_ICON           $'\u21B5'              # ↵
       ROOT_ICON                      $'\uE614 '             # 
       RUBY_ICON                      $'\uF219 '             # 
@@ -183,7 +181,7 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       OK_ICON                        $'\uF00C'              # 
       FAIL_ICON                      $'\uF00D'              # 
       SYMFONY_ICON                   $'\uE757'              # 
-      NODE_ICON                      ""                    # 
+      NODE_ICON                      $'\uF898'              # 
       MULTILINE_FIRST_PROMPT_PREFIX  $'\u256D'$'\U2500'     # ╭─
       MULTILINE_SECOND_PROMPT_PREFIX $'\u2570'$'\U2500 '    # ╰─
       APPLE_ICON                     $'\uF179'              # 
@@ -222,13 +220,13 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       PUBLIC_IP_ICON                 $'\UF0AC'              # 
       LOCK_ICON                      $'\UF023'              # 
       EXECUTION_TIME_ICON            $'\uF252'              # 
+      TIME_ICON                      $'\uF64F'              # 
       SSH_ICON                       $'\uF489'              # 
-      SKULL_ICON                     $'\uE231'              # 
-      DEVPATH_ICON                   ''
-      VIM_ICON                       $'\uE7C5'              # 
-      VIM_ICON_2                     $'\uE62B'              # 
-      FAIL_ICON_2                    $'\uF476'              # 
-      OK_ICON_2                      $'\uF05D'              # 
+      GITHUB_FOLDER_ICON             $'\uF7A2'              # 
+      GIT_FOLDER_ICON                $'\uF7A1'              # 
+      PROMPT_ICON                    $'\uF68C'              # 
+      ROOT_PROMPT_ICON               $'\uFA7B'              # 嗢
+
   )
 }
 _powerlevel9k_setup_nerdfont_fontconfig_icons
