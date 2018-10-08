@@ -707,19 +707,35 @@ prompt_dir() {
     "DEFAULT"         "FOLDER_ICON"
     "HOME"            "HOME_ICON"
     "HOME_SUBFOLDER"  "HOME_SUB_ICON"
+    "ROOT"            "ROOT_FOLDER_ICON"
+    "ETC"             "ETC_ICON"
+    "GIT"             "GIT_FOLDER_ICON"
+    "GITHUB"          "GITHUB_FOLDER_ICON"
+    "VIM"             "VIM_ICON"
   )
   local current_state="DEFAULT"
-  if [[ $(print -P "%~") == '~' ]]; then
+  local pwd=$PWD
+  if [[ $(print -P "%~") == '~'* ]]; then
     current_state="HOME"
-  elif [[ $(print -P "%~") == '~'* ]]; then
-    current_state="HOME_SUBFOLDER"
+  elif [[ ${pwd} == '/' ]]; then
+    current_state="ROOT"
+  # elif [[ $(git config --get remote.origin.url) =~ "github" ]]; then
+    # current_state="GITHUB"
+  # elif [[ $(git config --get remote.origin.url) =~ "git." ]]; then
+    # current_state="GIT"
+  # elif [[ ${pwd} =~ '.vim' ]]; then
+    # current_state="VIM"
+  # elif [[ $(print -P "%~") == '~'* ]]; then
+    # current_state="HOME_SUBFOLDER"
+  elif [[ $(print -P "%~") == '/etc'* ]]; then
+    current_state="ETC"
   fi
   serialize_segment "$0" "${current_state}" "$1" "$2" "${3}" "blue" "${DEFAULT_COLOR}" "${current_path}" "${dir_states[$current_state]}"
 }
 
 # dir_writable: Display information about the user's permission to write in the current directory
 prompt_dir_writable() {
-  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "242" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
+  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "240" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
 }
 
 # Docker machine
@@ -737,9 +753,12 @@ prompt_docker_machine() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_go_version() {
-  local go_version=$(go version 2>/dev/null | sed -E "s/.*(go[0-9.]*).*/\1/")
+  local go_version=""
+  if [[ "$PWD" =~ '[Gg]o/'* ]]; then
+    go_version=$(go version 2>/dev/null | sed -E "s/.*go([0-9.]*).*/\1/")
+  fi
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "${DEFAULT_COLOR_INVERTED}" "${go_version}" ""
+  serialize_segment "$0" "" "$1" "$2" "${3}" "27" "${DEFAULT_COLOR}" "${go_version}" "GO_ICON"
 }
 
 # Command number (in local history)
@@ -748,7 +767,7 @@ prompt_go_version() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_history() {
-  serialize_segment "$0" "" "$1" "$2" "${3}" "244" "223" "%h" ""
+  serialize_segment "$0" "" "$1" "$2" "${3}" "244" "223" "%h" "HISTORY_ICON"
 }
 
 # Detection for virtualization (systemd based systems only)
@@ -871,7 +890,7 @@ prompt_nvm() {
   [[ -n "${nvm_default}" && "${node_version}" =~ "${nvm_default}" ]] && node_version=""
   [[ "${node_version}" == "system" ]] && node_version="vsystem"
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "011" "${node_version:1}" "NODE_ICON"
+  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "11" "${node_version:1}" "NODE_ICON"
 }
 
 # NodeEnv Prompt
@@ -1072,7 +1091,7 @@ prompt_status() {
         "CONTENT"             "${RETVAL}"
         "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
         "FOREGROUND_COLOR"    "9"
-        "VISUAL_IDENTIFIER"   "FAIL_ICON_2"
+        "VISUAL_IDENTIFIER"   "FAIL_ICON"
       )
     fi
   elif [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" || "$POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE" == "true" ]]; then
@@ -1082,7 +1101,7 @@ prompt_status() {
       "CONTENT"             "$content"
       "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
       "FOREGROUND_COLOR"    "green"
-      "VISUAL_IDENTIFIER"   "OK_ICON_2"
+      "VISUAL_IDENTIFIER"   "OK_ICON"
     )
   fi
 
@@ -1537,24 +1556,12 @@ p9k_build_prompt_from_cache() {
   local PROMPT_SUFFIX=''
   if [[ "${POWERLEVEL9K_PROMPT_ON_NEWLINE}" == true ]]; then
     PROMPT="$(print_icon 'MULTILINE_FIRST_PROMPT_PREFIX')%f%b%k${PROMPT}"
-    if [[ "$PWD" == "/" ]]; then
+    if [[ $(print -P "%~") == "/" ]]; then
       PROMPT_SUFFIX="
- %F{231}$(print_icon 'SKULL_ICON')  %f"
-    elif [[ "$PWD" =~ ".vim" ]]; then
-      PROMPT_SUFFIX="
- %F{228}$(print_icon 'VIM_ICON_2')  %f"
-    elif [[ `git config --get remote.origin.url` =~ "github" ]]; then
-      PROMPT_SUFFIX="
- %F{92}$(print_icon 'VCS_GIT_GITHUB_ICON') %f"
-    elif [[ `git config --get remote.origin.url` =~ "git." ]]; then
-      PROMPT_SUFFIX="
- %F{214}$(print_icon 'VCS_GIT_GITLAB_ICON') %f"
-    elif [[ "$PWD" =~ "$DEVPATH" ]]; then
-      PROMPT_SUFFIX="
- %F{50}$(print_icon 'DEVPATH_ICON')  %f"
+$(print_icon 'MULTILINE_SECOND_PROMPT_ROOT_PREFIX')"
     else
       PROMPT_SUFFIX="
- %F{51}$(print_icon 'SSH_ICON')  %f"
+$(print_icon 'MULTILINE_SECOND_PROMPT_PREFIX')"
     fi
     if [[ "${POWERLEVEL9K_RPROMPT_ON_NEWLINE}" != true ]]; then
       # The right prompt should be on the same line as the first line of the left
