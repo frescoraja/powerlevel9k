@@ -715,18 +715,18 @@ prompt_dir() {
   )
   local current_state="DEFAULT"
   local pwd=$PWD
-  if [[ ${pwd} == '~' ]]; then
+  if [[ $(print -P "%~") == '~'* ]]; then
     current_state="HOME"
   elif [[ ${pwd} == '/' ]]; then
     current_state="ROOT"
-  elif [[ $(git config --get remote.origin.url) =~ "github" ]]; then
-    current_state="GITHUB"
-  elif [[ $(git config --get remote.origin.url) =~ "git." ]]; then
-    current_state="GIT"
-  elif [[ ${pwd} =~ '.vim' ]]; then
-    current_state="VIM"
-  elif [[ $(print -P "%~") == '~'* ]]; then
-    current_state="HOME_SUBFOLDER"
+  # elif [[ $(git config --get remote.origin.url) =~ "github" ]]; then
+    # current_state="GITHUB"
+  # elif [[ $(git config --get remote.origin.url) =~ "git." ]]; then
+    # current_state="GIT"
+  # elif [[ ${pwd} =~ '.vim' ]]; then
+    # current_state="VIM"
+  # elif [[ $(print -P "%~") == '~'* ]]; then
+    # current_state="HOME_SUBFOLDER"
   elif [[ $(print -P "%~") == '/etc'* ]]; then
     current_state="ETC"
   fi
@@ -735,7 +735,7 @@ prompt_dir() {
 
 # dir_writable: Display information about the user's permission to write in the current directory
 prompt_dir_writable() {
-  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "243" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
+  serialize_segment "$0" "FORBIDDEN" "$1" "$2" "${3}" "240" "208" "" 'LOCK_ICON' '[[ ! -w "$PWD" ]]'
 }
 
 # Docker machine
