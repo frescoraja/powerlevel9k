@@ -224,7 +224,7 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       SSH_ICON                       $'\uF489'              # 
       GITHUB_FOLDER_ICON             $'\uF7A2'              # 
       GIT_FOLDER_ICON                $'\uF7A1'              # 
-      PROMPT_ICON                    $'\uF68C'              # 
+      PROMPT_ICON                    $'\uF120'              # 
       ROOT_PROMPT_ICON               $'\uFA7B'              # 嗢
 
   )
