@@ -7,22 +7,34 @@
 ################################################################
 
 set_default POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY true
+# function +vi-git-untracked() {
+    # # TODO: check git >= 1.7.2 - see function git_compare_version()
+    # local FLAGS
+    # FLAGS=('--porcelain')
+
+    # if [[ "$POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY" == "false" ]]; then
+      # FLAGS+='--ignore-submodules=dirty'
+    # fi
+
+    # if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' && \
+            # -n $(git status ${FLAGS} | grep -E '^\?\?' 2> /dev/null | tail -n1) ]]; then
+        # hook_com[unstaged]+=" $(print_icon 'VCS_UNTRACKED_ICON')"
+        # VCS_WORKDIR_HALF_DIRTY=true
+    # else
+        # VCS_WORKDIR_HALF_DIRTY=false
+    # fi
+# }
+
 function +vi-git-untracked() {
-    # TODO: check git >= 1.7.2 - see function git_compare_version()
-    local FLAGS
-    FLAGS=('--porcelain')
-
-    if [[ "$POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY" == "false" ]]; then
-      FLAGS+='--ignore-submodules=dirty'
-    fi
-
-    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' && \
-            -n $(git status ${FLAGS} | grep -E '^\?\?' 2> /dev/null | tail -n1) ]]; then
-        hook_com[unstaged]+=" $(print_icon 'VCS_UNTRACKED_ICON')"
-        VCS_WORKDIR_HALF_DIRTY=true
-    else
-        VCS_WORKDIR_HALF_DIRTY=false
-    fi
+  if [[ "$P9K_VCS_SHOW_SUBMODULE_DIRTY" == "true" && "$(command git submodule foreach --quiet --recursive 'git ls-files --others --exclude-standard')" != "" ]]; then
+    hook_com[unstaged]+=" $(print_icon 'VCS_UNTRACK_ICON')"
+    VCS_WORKDIR_HALF_DIRTY=true
+  elif [[ "$(command git ls-files --others --exclude-standard)" != "" ]]; then
+    hook_com[unstaged]+=" $(print_icon 'VCS_UNTRACK_ICON')"
+    VCS_WORKDIR_HALF_DIRTY=true
+  else
+    VCS_WORKDIR_HALF_DIRTY=false
+  fi
 }
 
 function +vi-git-aheadbehind() {
@@ -33,12 +45,12 @@ function +vi-git-aheadbehind() {
 
     # for git prior to 1.7
     # ahead=$(git rev-list origin/${branch_name}..HEAD | wc -l)
-    ahead=$(git rev-list "${branch_name}"@{upstream}..HEAD 2>/dev/null | wc -l)
+    ahead=$(git rev-list --count "${branch_name}"@{upstream}..HEAD 2>/dev/null)
     (( ahead )) && gitstatus+=( " $(print_icon 'VCS_OUTGOING_CHANGES_ICON')${ahead// /}" )
 
     # for git prior to 1.7
     # behind=$(git rev-list HEAD..origin/${branch_name} | wc -l)
-    behind=$(git rev-list HEAD.."${branch_name}"@{upstream} 2>/dev/null | wc -l)
+    behind=$(git rev-list --count HEAD.."${branch_name}"@{upstream} 2>/dev/null)
     (( behind )) && gitstatus+=( " $(print_icon 'VCS_INCOMING_CHANGES_ICON')${behind// /}" )
 
     hook_com[misc]+=${(j::)gitstatus}
