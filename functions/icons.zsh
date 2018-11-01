@@ -226,7 +226,6 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       GIT_FOLDER_ICON                $'\uF7A1'              # 
       PROMPT_ICON                    $'\uF120'              # 
       ROOT_PROMPT_ICON               $'\uFA7B'              # 嗢
-
   )
 }
 _powerlevel9k_setup_nerdfont_fontconfig_icons
