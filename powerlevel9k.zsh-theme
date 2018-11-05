@@ -884,13 +884,18 @@ prompt_node_version() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_nvm() {
+  local should_print
   local node_version=$(nvm current 2> /dev/null)
   [[ "${node_version}" == "none" ]] && node_version=""
   local nvm_default=$(cat $NVM_DIR/alias/default 2> /dev/null)
-  [[ -n "${nvm_default}" && "${node_version}" =~ "${nvm_default}" ]] && node_version=""
+  [[ -n "${nvm_default}" && "${node_version}" =~ "v${nvm_default}"* ]] && node_version=""
   [[ "${node_version}" == "system" ]] && node_version="vsystem"
+  if [[ -n "${node_version}" && -n "${POWERLEVEL9K_NVM_NON_VERBOSE}" ]]; then
+    node_version=""
+    should_print="true"
+  fi
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "11" "${node_version:1}" "NODE_ICON"
+  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "11" "${node_version:1}" "NODE_ICON" "${should_print}"
 }
 
 # NodeEnv Prompt
@@ -989,7 +994,13 @@ prompt_rbenv() {
     fi
   fi
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "red" "$DEFAULT_COLOR" "${rbenv_version_name}" "RUBY_ICON"
+  local should_print
+  if [[ -n "${rbenv_version_name}" && "${POWERLEVEL9K_RBENV_NON_VERBOSE}" ]]; then
+    should_print="true"
+    rbenv_version_name=""
+  fi
+
+  serialize_segment "$0" "" "$1" "$2" "${3}" "red" "$DEFAULT_COLOR" "$rbenv_version_name" "RUBY_ICON" "${should_print}"
 }
 
 # chruby information
@@ -1105,7 +1116,7 @@ prompt_status() {
     )
   fi
 
-  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}" "true"
+  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}"
 }
 
 # Parameters:
