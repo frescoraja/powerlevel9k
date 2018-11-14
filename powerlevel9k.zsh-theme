@@ -706,8 +706,8 @@ prompt_dir() {
   dir_states=(
     "DEFAULT"         "FOLDER_ICON"
     "HOME"            "HOME_ICON"
-    "HOME_SUBFOLDER"  "HOME_SUB_ICON"
-    "ROOT"            "ROOT_FOLDER_ICON"
+    "SUBFOLDER"       "SUBFOLDER_ICON"
+    "ROOT"            "ROOT_ICON"
     "ETC"             "ETC_ICON"
     "GIT"             "GIT_FOLDER_ICON"
     "GITHUB"          "GITHUB_FOLDER_ICON"
@@ -717,8 +717,6 @@ prompt_dir() {
   local pwd=$PWD
   if [[ $(print -P "%~") == '~'* ]]; then
     current_state="HOME"
-  elif [[ ${pwd} == '/' ]]; then
-    current_state="ROOT"
   # elif [[ $(git config --get remote.origin.url) =~ "github" ]]; then
     # current_state="GITHUB"
   # elif [[ $(git config --get remote.origin.url) =~ "git." ]]; then
@@ -727,10 +725,17 @@ prompt_dir() {
     # current_state="VIM"
   # elif [[ $(print -P "%~") == '~'* ]]; then
     # current_state="HOME_SUBFOLDER"
-  elif [[ $(print -P "%~") == '/etc'* ]]; then
-    current_state="ETC"
+  elif [[ ${pwd} == '/' ]]; then
+    current_path=""
+    current_state="ROOT"
+  else
+    if [[ ! -w $pwd ]]; then
+      current_state="ETC"
+    else
+      current_state="SUBFOLDER"
+    fi
   fi
-  serialize_segment "$0" "${current_state}" "$1" "$2" "${3}" "blue" "${DEFAULT_COLOR}" "${current_path}" "${dir_states[$current_state]}"
+  serialize_segment "$0" "${current_state}" "$1" "$2" "${3}" "${POWERLEVEL9K_DIR_BACKGROUND}" "${POWERLEVEL9K_DIR_FOREGROUND}" "${current_path}" "${dir_states[$current_state]}" "true"
 }
 
 # dir_writable: Display information about the user's permission to write in the current directory
@@ -888,7 +893,7 @@ prompt_nvm() {
   local node_version=$(nvm current 2> /dev/null)
   [[ "${node_version}" == "none" ]] && node_version=""
   local nvm_default=$(cat $NVM_DIR/alias/default 2> /dev/null)
-  [[ -n "${nvm_default}" && "${node_version}" =~ "v${nvm_default}"* ]] && node_version=""
+  [[ -n "${nvm_default}" && "${node_version}" == "v${nvm_default}"* ]] && node_version=""
   [[ "${node_version}" == "system" ]] && node_version="vsystem"
   if [[ -n "${node_version}" && -n "${POWERLEVEL9K_NVM_NON_VERBOSE}" ]]; then
     node_version=""
