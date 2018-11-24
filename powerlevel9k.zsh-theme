@@ -889,18 +889,21 @@ prompt_node_version() {
 #   * $2 Index: integer
 #   * $3 Joined: bool - If the segment should be joined
 prompt_nvm() {
-  local should_print
-  local node_version=$(nvm current 2> /dev/null)
-  [[ "${node_version}" == "none" ]] && node_version=""
-  local nvm_default=$(cat $NVM_DIR/alias/default 2> /dev/null)
-  [[ -n "${nvm_default}" && "${node_version}" == "v${nvm_default}"* ]] && node_version=""
-  [[ "${node_version}" == "system" ]] && node_version="vsystem"
+  local node_version nvm_default should_print
+  (( $+functions[nvm_version] )) || return
+
+  node_version=$(nvm_version current)
+  [[ -z "${node_version}" || ${node_version} == "none" ]] && return
+
+  nvm_default=$(nvm_version default)
+  [[ "$node_version" =~ "$nvm_default" ]] && return
+
   if [[ -n "${node_version}" && -n "${POWERLEVEL9K_NVM_NON_VERBOSE}" ]]; then
+    should_print=true
     node_version=""
-    should_print="true"
   fi
 
-  serialize_segment "$0" "" "$1" "$2" "${3}" "green" "11" "${node_version:1}" "NODE_ICON" "${should_print}"
+  serialize_segment "$0" "" $1 "$2" ${3} "green" "11" "${node_version:1}" "NODE_ICON" "${should_print}"
 }
 
 # NodeEnv Prompt
