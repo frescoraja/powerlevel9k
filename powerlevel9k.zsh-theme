@@ -1085,6 +1085,7 @@ prompt_ssh() {
 # Status: return code if verbose, otherwise just an icon if an error occurred
 set_default POWERLEVEL9K_STATUS_VERBOSE true
 set_default POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE false
+set_default POWERLEVEL9K_STATUS_OK_HIDE_RETURN false
 # Parameters:
 #   * $1 Alignment: string - left|right
 #   * $2 Index: integer
@@ -1092,14 +1093,14 @@ set_default POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE false
 prompt_status() {
   content="${RETVAL}"
   typeset -Ah current_state
-  if [[ "${RETVAL}" -ne 0 ]]; then
+  if [[ "${content}" -ne 0 ]]; then
     if [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" ]]; then
       # This is a variant of the error state,
       # that just has different colors and a
       # different visual identifier.. sigh.
       current_state=(
         "STATE"               "ERROR"
-        "CONTENT"             "${RETVAL}"
+        "CONTENT"             "${content}"
         "BACKGROUND_COLOR"    "9"
         "FOREGROUND_COLOR"    "220"
         "VISUAL_IDENTIFIER"   "CARRIAGE_RETURN_ICON"
@@ -1107,24 +1108,25 @@ prompt_status() {
     else
       current_state=(
         "STATE"               "ERROR"
-        "CONTENT"             "${RETVAL}"
+        "CONTENT"             "${content}"
         "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
         "FOREGROUND_COLOR"    "9"
         "VISUAL_IDENTIFIER"   "FAIL_ICON"
       )
     fi
   elif [[ "$POWERLEVEL9K_STATUS_VERBOSE" == "true" || "$POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE" == "true" ]]; then
-    [ "$POWERLEVEL9K_STATUS_OK_NON_VERBOSE" == true ] && content=""
+    [[ "$POWERLEVEL9K_STATUS_OK_HIDE_RETURN" == "true" ]] && content=""
     current_state=(
       "STATE"               "OK"
-      "CONTENT"             "$content"
+      "CONTENT"             "${content}"
       "BACKGROUND_COLOR"    "${DEFAULT_COLOR}"
       "FOREGROUND_COLOR"    "green"
       "VISUAL_IDENTIFIER"   "OK_ICON"
+      "CONDITION"            "true"
     )
   fi
 
-  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}"
+  serialize_segment "$0" "${current_state[STATE]}" "$1" "$2" "${3}" "${current_state[BACKGROUND_COLOR]}" "${current_state[FOREGROUND_COLOR]}" "${current_state[CONTENT]}" "${current_state[VISUAL_IDENTIFIER]}" "${current_state[CONDITION]}"
 }
 
 # Parameters:
