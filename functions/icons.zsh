@@ -214,6 +214,7 @@ function _powerlevel9k_setup_nerdfont_fontconfig_icons() {
       VCS_GIT_GITLAB_ICON            $'\uF296 '             # 
       VCS_HG_ICON                    $'\uF0C3 '             # 
       VCS_SVN_ICON                   $'\uE72D '             # 
+      VIM_ICON                       $'\uE7C5 '             # 
       RUST_ICON                      $'\uE7A8 '             # 
       PYTHON_ICON                    $'\UE73C '             # 
       SWIFT_ICON                     $'\uE755'              # 

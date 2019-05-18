@@ -1379,10 +1379,14 @@ set_default "POWERLEVEL9K_VI_COMMAND_MODE_STRING" "NORMAL"
 prompt_vi_mode() {
   local vi_mode
   local current_state
-  typeset -gAH vi_states
+  typeset -gAH vi_states vi_bg
   vi_states=(
-    'NORMAL'      "${DEFAULT_COLOR_INVERTED}"
+    'NORMAL'      231
     'INSERT'      'blue'
+  )
+  vi_bg=(
+    'NORMAL'      'green'
+    'INSERT'      '233'
   )
   case "${KEYMAP}" in
     main|viins)
@@ -1394,7 +1398,7 @@ prompt_vi_mode() {
       vi_mode="${POWERLEVEL9K_VI_COMMAND_MODE_STRING}"
     ;;
   esac
-  serialize_segment "${0}" "${current_state}" "${1}" "${2}" "${3}" "${DEFAULT_COLOR}" "${vi_states[$current_state]}" "${vi_mode}" ''
+  serialize_segment "${0}" "${current_state}" "${1}" "${2}" "${3}" "${vi_bg[$current_state]}" "${vi_states[$current_state]}" "${vi_mode}" ''
 }
 
 # Virtualenv: current working virtualenv
